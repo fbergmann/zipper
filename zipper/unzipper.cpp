@@ -1,7 +1,7 @@
 #include "unzipper.h"
-#include "zip.h"
-#include "unzip.h"
-#include "ioapi_mem.h"
+#include "minizip/zip.h"
+#include "minizip/unzip.h"
+#include "minizip/ioapi_mem.h"
 #include "CDirEntry.h"
 #include "defs.h"
 #include "tools.h"
@@ -39,17 +39,11 @@ private:
 
         int err = unzGetCurrentFileInfo64(m_zf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
         if (UNZ_OK != err)
-            throw EXCEPTION_CLASS("Error, couldn't get the current entry info");
+            throw EXCEPTION_CLASS(std::string("Error, couln't get the current entry info").c_str());
 
-        std::string fileName = std::string(filename_inzip);
-
-        bool isDir = file_info.external_fa == 16 ||
-            (!fileName.empty() && fileName[fileName.length() - 1] == '/');
-                     
-        return ZipEntry(fileName, file_info.compressed_size, file_info.uncompressed_size,
+        return ZipEntry(std::string(filename_inzip), file_info.compressed_size, file_info.uncompressed_size,
                         file_info.tmu_date.tm_year, file_info.tmu_date.tm_mon, file_info.tmu_date.tm_mday,
-                        file_info.tmu_date.tm_hour, file_info.tmu_date.tm_min, file_info.tmu_date.tm_sec, file_info.dosDate,
-                        isDir);
+                        file_info.tmu_date.tm_hour, file_info.tmu_date.tm_min, file_info.tmu_date.tm_sec, file_info.dosDate);
     }
 
 #if 0
@@ -135,8 +129,12 @@ public:
 
         if (!entryinfo.uncompressedSize && entryinfo.isDir)
         {
-            if (!makedir(fileName))
-                err = UNZ_ERRNO;
+          if (!makedir(fileName))
+          {
+            // only mark this as error, if the directory wasn't created or is not writable
+            if (!CDirEntry::isDir(fileName) && !CDirEntry::isWritable(fileName))
+              err = UNZ_ERRNO;
+          }
         }
         else
         {
