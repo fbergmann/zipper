@@ -47,6 +47,25 @@ jobs:
       if: matrix.c_compiler == 'cl'
       uses: ilammy/msvc-dev-cmd@v1
 
+    - name: on windows, setup llvm if clang is used
+      if: matrix.c_compiler == 'clang' && matrix.os == 'windows-latest'
+      shell: cmd
+      run: |
+        choco install llvm
+
+    - name: on windows if gcc is used, setup mingw
+      if: matrix.c_compiler == 'gcc' && matrix.os == 'windows-latest'
+      shell: cmd
+      run: |
+        choco install mingw
+        eho PATH=%PATH%;C:\msys64\mingw64\bin >> $GITHUB_ENV
+
+    - name: on ubuntu if clang is used, setup llvm
+      if: matrix.c_compiler == 'clang' && matrix.os == 'ubuntu-latest'
+      shell: bash
+      run: |
+        sudo apt-get install llvm
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
