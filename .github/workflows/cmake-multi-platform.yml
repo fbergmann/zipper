@@ -60,8 +60,8 @@ jobs:
 
     - name: get and build dependencies
       run: |
-         git submodule update --init --remote --force --recursive
-         git clone https://github.com/copasi/copasi-dependencies.git --depth 1
+         git submodule update --init --remote --force --recursive --quiet
+         git clone https://github.com/copasi/copasi-dependencies.git --depth 1 --quiet
          cmake -G Ninja -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -B ${{ steps.strings.outputs.build-output-dir }}_zip copasi-dependencies/src/zlib/ -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.build-output-dir }}_inst_z
          cmake --build ${{ steps.strings.outputs.build-output-dir }}_zip
          cmake --install ${{ steps.strings.outputs.build-output-dir }}_zip
