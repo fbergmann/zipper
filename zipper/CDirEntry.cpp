@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(WIN32)
 # include <io.h>
 # include <direct.h>
 typedef struct _stat STAT;
