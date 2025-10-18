@@ -95,11 +95,10 @@ voidpf fopen_buf_internal_func(voidpf opaque, voidpf stream, int number_disk, in
     return streamio;
 }
 
-voidpf ZCALLBACK fopen_buf_func (voidpf opaque, const void* filename, int mode)
+voidpf ZCALLBACK fopen_buf_func (voidpf opaque, const char* filename, int mode)
 {
-    const char* fname = (const char*)filename;
     ourbuffer_t *bufio = (ourbuffer_t *)opaque;
-    voidpf stream = bufio->filefunc.zopen_file(bufio->filefunc.opaque, fname, mode);
+    voidpf stream = bufio->filefunc.zopen_file(bufio->filefunc.opaque, filename, mode);
     return fopen_buf_internal_func(opaque, stream, 0, mode);
 }
 
