@@ -106,9 +106,6 @@ jobs:
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       run: |
-        cp ./test/brg_endian.h ./minizip/aes/brg_endian.h
-        cp ./test/ioapi_buf.c ./minizip/ioapi_buf.c
-        cp ./test/ioapi_buf.h ./minizip/ioapi_buf.h
         cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Test
