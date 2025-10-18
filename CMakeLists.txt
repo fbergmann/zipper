@@ -213,17 +213,14 @@ else()
            endif()
        endif(ENABLE_UNIVERSAL)
    else(APPLE)
-   if (NOT WIN32)
        add_definitions(-DLINUX)
-   
-       if(NOT CYGWIN)
+       if(NOT CYGWIN AND NOT WIN32)
            # on cygwin all code is position independent so -fPIC is not needed
            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing -fPIC")
            set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing -fPIC")
        endif()
    
        set(BUILD_DEFINITIONS "${BUILD_DEFINITIONS} -DLINUX")
-   endif(NOT WIN32)
    endif(APPLE)
 
 endif()
