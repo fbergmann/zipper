@@ -213,6 +213,7 @@ else()
            endif()
        endif(ENABLE_UNIVERSAL)
    else(APPLE)
+   if (NOT WIN32)
        add_definitions(-DLINUX)
    
        if(NOT CYGWIN)
@@ -222,6 +223,7 @@ else()
        endif()
    
        set(BUILD_DEFINITIONS "${BUILD_DEFINITIONS} -DLINUX")
+   endif(NOT WIN32)
    endif(APPLE)
 
 endif()
